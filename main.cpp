@@ -20,6 +20,16 @@ bool palavraJaexiste(string buscaPalavra, vector<palavra> &lista){
     return false;
 }
 
+int buscarIndex(string buscaPalavra, vector<palavra> &lista){
+    int cont = 0;
+    for (auto &p : lista) {
+        if(p.palavra.compare(buscaPalavra) == 0)
+            return cont;
+        cont++;
+    }
+    return NULL;
+}
+
 string verificaFinalPalavra(string palavra){
     string p = palavra.substr(0, palavra.size());
 
@@ -48,7 +58,11 @@ void lerArquivo(string nomeArquivo, vector<palavra> &lista){
         while(getline(ss, palavraTexto, ' ')){
             palavraTexto = verificaFinalPalavra(palavraTexto);
             if(palavraJaexiste(palavraTexto, lista)){
-
+                int index = buscarIndex(palavraTexto, lista);
+                lista[index].ocorrencias.resize(lista[index].ocorrencias.capacity()+cont);
+                int aux = lista[index].ocorrencias[cont];
+                lista[index].ocorrencias.insert((lista[index].ocorrencias.begin()+cont), ++aux);
+                cout << lista[index].palavra << lista[index].ocorrencias[cont] << endl << endl;
             }
             else{
                 inserePalavraOrdem(palavraTexto, cont, lista);
@@ -76,8 +90,7 @@ int main() {
                 lerArquivo(nameArquivo, lista);
                 for (auto &p : lista) {
                     cout << p.palavra << " ";
-                    cout << p.ocorrencias[1] << endl;
-
+                    cout << p.ocorrencias[0] << " " << p.ocorrencias[1] << endl;
                 }
                 break;
             case 2:
