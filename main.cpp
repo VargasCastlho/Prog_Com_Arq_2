@@ -62,9 +62,7 @@ void lerArquivo(string nomeArquivo, vector<palavra> &lista){
             if(palavraJaexiste(palavraTexto, lista)){
                 int index = buscarIndex(palavraTexto, lista);
                 lista[index].ocorrencias.resize(lista[index].ocorrencias.capacity()+cont);
-                int aux = lista[index].ocorrencias[cont];
-                lista[index].ocorrencias.insert((lista[index].ocorrencias.begin()+cont), ++aux);
-                cout << lista[index].palavra << lista[index].ocorrencias[cont] << endl << endl;
+                ++lista[index].ocorrencias[cont];
             }
             else{
                 inserePalavraOrdem(palavraTexto, cont, lista);
@@ -75,8 +73,40 @@ void lerArquivo(string nomeArquivo, vector<palavra> &lista){
     arq. close();
 }
 
+void escreverIndice(vector<palavra> &lista){
+    FILE *arq;
+    arq = fopen("indice.dat", "wb");
+    int soma = 0;
+    int size = lista.size();
+    fseek(arq, 0, SEEK_CUR);
+    fwrite(&size, sizeof(int), 1, arq);
+    for(auto p : lista) {
+        int caracteres = p.palavra.size()+1;
+        fseek(arq, 0, SEEK_CUR);
+        fwrite(&caracteres, sizeof(int), 1, arq);
 
-void utilizarIndice(){
+        string palavraP = p.palavra+'\0';
+        fseek(arq, 0, SEEK_CUR);
+        fwrite(&caracteres, sizeof(palavraP), 1, arq);
+
+        for (int i = 0; i < p.ocorrencias.size(); i++) {
+            soma += p.ocorrencias[i];
+        }
+        fseek(arq, 0, SEEK_CUR);
+        fwrite(&soma, sizeof(int), 1, arq);
+
+        for (int i = 0; i < p.ocorrencias.size(); i++) {
+            if(p.ocorrencias[i]>0){
+                fseek(arq, 0, SEEK_CUR);
+                fwrite(&i, sizeof(int), 1, arq);
+            }
+        }
+    }
+    fclose(arq);
+}
+
+
+void utilizarIndice() {
     vector<palavra> lista;
     string procurarPalavra;
     palavra p;
@@ -84,17 +114,17 @@ void utilizarIndice(){
     //a,b,c
     ifstream aBin;
     aBin.open("indice.dat", ios_base::in | ios_base::binary);
-    aBin.read((char*) &totalp, sizeof(int));
+    aBin.read((char *) &totalp, sizeof(int));
     cout << "Quantidade total de palavras:" << totalp << endl;
 
-    if(aBin.is_open()){
-        while(aBin.read((char*) &p, sizeof(palavra))){
+    if (aBin.is_open()) {
+        while (aBin.read((char *) &p, sizeof(palavra))) {
             cout << p.palavra << endl;
 
 
         }
         aBin.close();
-    }else{
+    } else {
         cout << "Problemas ao abrir o arquivo!" << endl;
     }
 
@@ -102,12 +132,14 @@ void utilizarIndice(){
     //d,e
     cout << "Qual palavra deseja pesquisar?" << endl;
     cin >> procurarPalavra;
-    if(palavraJaexiste(procurarPalavra)){
+    if (palavraJaexiste(procurarPalavra, lista)) {
 
 
-    }else{
-        cout << "Palavra nao encontrada." <<endl;
+    } else {
+        cout << "Palavra nao encontrada." << endl;
     }
+
+}
 
 int main() {
     vector<palavra> lista;
@@ -124,10 +156,7 @@ int main() {
                 cout << "Nome do arquivo texto:" <<endl;
                 cin >> nameArquivo;
                 lerArquivo(nameArquivo, lista);
-                for (auto &p : lista) {
-                    cout << p.palavra << " ";
-                    cout << p.ocorrencias[0] << " " << p.ocorrencias[1] << endl;
-                }
+               escreverIndice(lista);
                 break;
             case 2:
                 break;
