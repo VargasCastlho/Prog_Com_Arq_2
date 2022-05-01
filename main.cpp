@@ -11,6 +11,8 @@ typedef struct palavra{
     vector<int> ocorrencias = {0};
 }palavra;
 
+
+
 bool palavraJaexiste(string buscaPalavra, vector<palavra> &lista){
     lista.begin();
     for (auto &p : lista) {
@@ -72,6 +74,40 @@ void lerArquivo(string nomeArquivo, vector<palavra> &lista){
     }
     arq. close();
 }
+
+
+void utilizarIndice(){
+    vector<palavra> lista;
+    string procurarPalavra;
+    palavra p;
+    int totalp;
+    //a,b,c
+    ifstream aBin;
+    aBin.open("indice.dat", ios_base::in | ios_base::binary);
+    aBin.read((char*) &totalp, sizeof(int));
+    cout << "Quantidade total de palavras:" << totalp << endl;
+
+    if(aBin.is_open()){
+        while(aBin.read((char*) &p, sizeof(palavra))){
+            cout << p.palavra << endl;
+
+
+        }
+        aBin.close();
+    }else{
+        cout << "Problemas ao abrir o arquivo!" << endl;
+    }
+
+
+    //d,e
+    cout << "Qual palavra deseja pesquisar?" << endl;
+    cin >> procurarPalavra;
+    if(palavraJaexiste(procurarPalavra)){
+
+
+    }else{
+        cout << "Palavra nao encontrada." <<endl;
+    }
 
 int main() {
     vector<palavra> lista;
