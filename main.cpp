@@ -79,25 +79,25 @@ void escreverIndice(vector<palavra> &lista){
     int size = lista.size();
     fseek(arq, 0, SEEK_END);
     fwrite(&size, sizeof(int), 1, arq);
-    for(int i=0; i < lista.size(); i++) {
-        int caracteres = lista[i].palavra.size()+1;
+    for(auto p : lista) {
+        int caracteres = p.palavra.size()+1;
         fseek(arq, 0, SEEK_END);
         fwrite(&caracteres, sizeof(int), 1, arq);
 
         string palavraP;
-        palavraP = lista[i].palavra + '\0';
+        palavraP = p.palavra + '\0';
         fseek(arq, 0, SEEK_END);
         fwrite(&palavraP, sizeof(string), 1, arq);
 
         int soma = 0;
-        for (int i = 0; i < lista[i].ocorrencias.size(); i++) {
-            soma += lista[i].ocorrencias[i];
+        for (int i = 0; i < p.ocorrencias.size(); i++) {
+            soma += p.ocorrencias[i];
         }
         fseek(arq, 0, SEEK_END);
         fwrite(&soma, sizeof(int), 1, arq);
 
-        for (int i = 0; i < lista[i].ocorrencias.size(); i++) {
-            if(lista[i].ocorrencias[i]>0){
+        for (int i = 0; i < p.ocorrencias.size(); i++) {
+            if(p.ocorrencias[i]>0){
                 fseek(arq, 0, SEEK_END);
                 fwrite(&i, sizeof(int), 1, arq);
             }
