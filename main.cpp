@@ -89,7 +89,7 @@ void escreverIndice(vector<palavra> &lista){
         fseek(arq, 0, SEEK_END);
         fwrite(&palavraP, sizeof(string), 1, arq);
 
-        int soma = 1;
+        int soma = 0;
         for (int i = 0; i < lista[i].ocorrencias.size(); i++) {
             soma += lista[i].ocorrencias[i];
         }
