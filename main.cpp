@@ -75,33 +75,52 @@ void lerArquivo(string nomeArquivo, vector<palavra> &lista){
 
 void escreverIndice(vector<palavra> &lista){
     FILE *arq;
-    arq = fopen("indice.dat", "wb");
-    int soma = 0;
+    arq = fopen("indice.txt", "wb");
     int size = lista.size();
-    fseek(arq, 0, SEEK_CUR);
+    fseek(arq, 0, SEEK_END);
     fwrite(&size, sizeof(int), 1, arq);
     for(auto p : lista) {
         int caracteres = p.palavra.size()+1;
-        fseek(arq, 0, SEEK_CUR);
+        fseek(arq, 0, SEEK_END);
         fwrite(&caracteres, sizeof(int), 1, arq);
 
-        string palavraP = p.palavra+'\0';
-        fseek(arq, 0, SEEK_CUR);
-        fwrite(&caracteres, sizeof(palavraP), 1, arq);
+        string palavraP;
+        palavraP = p.palavra + '\0';
+        fseek(arq, 0, SEEK_END);
+        fwrite(&palavraP, sizeof(string), 1, arq);
 
+        int soma = 1;
         for (int i = 0; i < p.ocorrencias.size(); i++) {
             soma += p.ocorrencias[i];
         }
-        fseek(arq, 0, SEEK_CUR);
+        fseek(arq, 0, SEEK_END);
         fwrite(&soma, sizeof(int), 1, arq);
 
         for (int i = 0; i < p.ocorrencias.size(); i++) {
             if(p.ocorrencias[i]>0){
-                fseek(arq, 0, SEEK_CUR);
+                fseek(arq, 0, SEEK_END);
                 fwrite(&i, sizeof(int), 1, arq);
             }
         }
     }
+    fclose(arq);
+
+    int totalp;
+    FILE *aBin;
+    aBin = fopen("indice.txt", "rb");
+    fseek(aBin, 0, SEEK_SET);
+    fread(&totalp, sizeof(int),1, aBin);
+    cout << "Quantidade total de palavras: " << totalp << endl;
+
+    int c;
+    fseek(aBin, 0, SEEK_CUR);
+    fread(&c, sizeof(int),1, aBin);
+    cout << c << endl;
+
+    string plv;
+    fseek(aBin, 0, SEEK_CUR);
+    fread(&plv, sizeof(plv),1, aBin);
+    cout << plv << endl;
     fclose(arq);
 }
 
@@ -156,7 +175,7 @@ int main() {
                 cout << "Nome do arquivo texto:" <<endl;
                 cin >> nameArquivo;
                 lerArquivo(nameArquivo, lista);
-               escreverIndice(lista);
+                escreverIndice(lista);
                 break;
             case 2:
                 break;
