@@ -50,8 +50,9 @@ void inserePalavraOrdem(string p, int linha, vector<palavra> &lista){
 
 void lerArquivo(string nomeArquivo, vector<palavra> &lista){
     string linha;
-
-    fstream arq("C://Users//STI//CLionProjects//untitled3//a.txt", fstream::in);
+    fstream arq("C://Users//thayn//Documents//UFF//4_PERIODO//Prog_com_arquivos//prog_tab//a.txt", fstream::in);
+    //fstream arq("C://Users//STI//CLionProjects//untitled3//a.txt", fstream::in);
+    //fstream arq(nomeArquivo, fstream::in);
     int cont = 0;
     while(arq.eof()==0){
         std::getline(arq, linha);
@@ -104,8 +105,8 @@ void escreverIndice(vector<palavra> &lista){
         }
     }
     fclose(arq);
-
-    int totalp;
+    /*
+     * int totalp;
     FILE *aBin;
     aBin = fopen("indice.dat", "rb");
     fseek(aBin, 0, SEEK_SET);
@@ -121,21 +122,57 @@ void escreverIndice(vector<palavra> &lista){
     fseek(aBin, 0, SEEK_CUR);
     fread(&plv, sizeof(plv),1, aBin);
     cout << plv << endl;
-    fclose(arq);
+    fclose(aBin);
+     * */
+
+
 }
 
-
 void utilizarIndice() {
+
     vector<palavra> lista;
     string procurarPalavra;
-    palavra p;
+    int caracteresBin, linha, qtdOcorrencia;
+    string palavra;
     int totalp;
     //a,b,c
+
     ifstream aBin;
     aBin.open("indice.dat", ios_base::in | ios_base::binary);
     aBin.read((char *) &totalp, sizeof(int));
-    cout << "Quantidade total de palavras:" << totalp << endl;
+    cout << "Quantidade total de palavras: " << totalp << endl;
 
+
+    /*
+
+    aBin.read((char *) &caracteresBin, sizeof(int));
+    aBin.read((char *) &palavra, sizeof(palavra));
+    aBin.read((char *) &qtdOcorrencia, sizeof(int));
+    cout << caracteresBin <<" " << palavra <<" " << qtdOcorrencia;
+
+*/
+
+
+
+    while(aBin.eof()==0){
+
+        aBin.read((char *) &caracteresBin, sizeof(int));
+        aBin.read((char *) &palavra, sizeof(palavra));
+        aBin.read((char *) &qtdOcorrencia, sizeof(int));
+
+        cout << caracteresBin <<" " << palavra <<" " << qtdOcorrencia;
+
+        for(int i = 0; i < qtdOcorrencia; i++){
+            aBin.read((char *) &linha, sizeof(int));
+            cout << " "<< linha;
+        }
+        cout << endl;
+    }
+
+    aBin.close();
+
+
+/*
     if (aBin.is_open()) {
         while (aBin.read((char *) &p, sizeof(palavra))) {
             cout << p.palavra << endl;
@@ -158,7 +195,12 @@ void utilizarIndice() {
         cout << "Palavra nao encontrada." << endl;
     }
 
+    */
+
 }
+
+
+
 
 int main() {
     vector<palavra> lista;
@@ -178,6 +220,7 @@ int main() {
                 escreverIndice(lista);
                 break;
             case 2:
+                utilizarIndice();
                 break;
             case 3:
                 cout <<"Voce saiu do programa!" << endl;
