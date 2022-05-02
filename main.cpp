@@ -129,21 +129,48 @@ void escreverIndice(vector<palavra> &lista){
 }
 
 void utilizarIndice() {
+    // tentativa de criar struct para leitura do arquivo
+    typedef struct palabraBin{
+        int qtdCaracteres;
+        string palavraB;
+        int qtdOcorrencias;
+        vector<int> linhas= {0};
+    }palavraBin;
+
+
 
     vector<palavra> lista;
-    string procurarPalavra;
     int caracteresBin, linha, qtdOcorrencia;
     string palavra;
     int totalp;
-    //a,b,c
+    palavraBin binpalavra;
+
 
     ifstream aBin;
     aBin.open("indice.dat", ios_base::in | ios_base::binary);
+
+    //conseguiu ler o primeiro inteiro do arquivo
     aBin.read((char *) &totalp, sizeof(int));
     cout << "Quantidade total de palavras: " << totalp << endl;
 
 
+ //tentativa de ler com struct
+    while(aBin.eof()==0) {
+
+        aBin.read((char *) &binpalavra.qtdCaracteres, sizeof(int));
+        aBin.read((char *) &binpalavra.palavraB, sizeof(palavra));
+        aBin.read((char *) &binpalavra.qtdOcorrencias, sizeof(int));
+        for(int i = 0; i < binpalavra.qtdOcorrencias; i++){
+            aBin.read((char *) &binpalavra.linhas[i], sizeof(int));
+
+        }
+        //nao sei direito como faria aqui pq as x uma plavra tem duas linhas então dois inteiros e as x um inteiro so (uma linha)
+
+    }
+
+
     /*
+     * // teste fora do while
 
     aBin.read((char *) &caracteresBin, sizeof(int));
     aBin.read((char *) &palavra, sizeof(palavra));
@@ -152,8 +179,8 @@ void utilizarIndice() {
 
 */
 
-
-
+/*
+    // leitura sem struct, quando vai ler a palavra da erro de acesso de memoria (<error: Cannot access memory at address 0xeb1efff820>)
     while(aBin.eof()==0){
 
         aBin.read((char *) &caracteresBin, sizeof(int));
@@ -168,34 +195,9 @@ void utilizarIndice() {
         }
         cout << endl;
     }
-
+*/
     aBin.close();
 
-
-/*
-    if (aBin.is_open()) {
-        while (aBin.read((char *) &p, sizeof(palavra))) {
-            cout << p.palavra << endl;
-
-
-        }
-        aBin.close();
-    } else {
-        cout << "Problemas ao abrir o arquivo!" << endl;
-    }
-
-
-    //d,e
-    cout << "Qual palavra deseja pesquisar?" << endl;
-    cin >> procurarPalavra;
-    if (palavraJaexiste(procurarPalavra, lista)) {
-
-
-    } else {
-        cout << "Palavra nao encontrada." << endl;
-    }
-
-    */
 
 }
 
@@ -231,15 +233,6 @@ int main() {
         }
 
     }
-
-
-
-
-
-
-
-
-
 
     return 0;
 }

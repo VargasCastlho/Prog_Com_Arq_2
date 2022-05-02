@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/STI/CLionProjects/untitled3
+# Install script for directory: C:/Users/thayn/Documents/UFF/4_PERIODO/Prog_com_arquivos/Prog_Com_Arq
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,7 +34,7 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "C:/Users/STI/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/221.5080.224/bin/mingw/bin/objdump.exe")
+  set(CMAKE_OBJDUMP "C:/Program Files/JetBrains/CLion 2022.1/bin/mingw/bin/objdump.exe")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/STI/CLionProjects/untitled3/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/thayn/Documents/UFF/4_PERIODO/Prog_com_arquivos/Prog_Com_Arq/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
