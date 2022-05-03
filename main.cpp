@@ -8,7 +8,7 @@ using namespace std;
 
 typedef struct palavra{
     string palavra;
-    vector<int> ocorrencias = {0};
+    vector<int> ocorrencias;
 }palavra;
 
 
@@ -43,14 +43,13 @@ string verificaFinalPalavra(string palavra){
 void inserePalavraOrdem(string p, int linha, vector<palavra> &lista){
     palavra palavra1;
     palavra1.palavra = p;
-    palavra1.ocorrencias.resize(palavra1.ocorrencias.capacity()+linha);
-    palavra1.ocorrencias.insert(palavra1.ocorrencias.begin()+linha, 1);
+    palavra1.ocorrencias.push_back(linha);
     lista.push_back(palavra1);
 }
 
 void lerArquivo(string nomeArquivo, vector<palavra> &lista){
     string linha;
-    fstream arq("C://Users//thayn//Documents//UFF//4_PERIODO//Prog_com_arquivos//prog_tab//a.txt", fstream::in);
+    fstream arq("a.txt", fstream::in);
     //fstream arq("C://Users//STI//CLionProjects//untitled3//a.txt", fstream::in);
     //fstream arq(nomeArquivo, fstream::in);
     int cont = 0;
@@ -62,8 +61,7 @@ void lerArquivo(string nomeArquivo, vector<palavra> &lista){
             palavraTexto = verificaFinalPalavra(palavraTexto);
             if(palavraJaexiste(palavraTexto, lista)){
                 int index = buscarIndex(palavraTexto, lista);
-                lista[index].ocorrencias.resize(lista[index].ocorrencias.capacity()+cont);
-                ++lista[index].ocorrencias[cont];
+                lista[index].ocorrencias.push_back(cont);
             }
             else{
                 inserePalavraOrdem(palavraTexto, cont, lista);
@@ -78,63 +76,28 @@ void escreverIndice(vector<palavra> &lista){
     FILE *arq;
     arq = fopen("indice.dat", "wb");
     int size = lista.size();
-    //fseek(arq, 0, SEEK_END);
+    fseek(arq, 0, SEEK_END);
     fwrite(&size, sizeof(int), 1, arq);
     for(auto p : lista) {
 
         int caracteres = p.palavra.size()+1;
-        //fseek(arq, 0, SEEK_END);
         fwrite(&caracteres, sizeof(int), 1, arq);
 
         string palavraP;
         palavraP = p.palavra + '\0';
-        fseek(arq, 0, SEEK_END);
         fwrite(palavraP.c_str(), caracteres, 1, arq);
-        /*
-        int soma = 0;
-        for (int i = 0; i < p.ocorrencias.size(); i++) {
-            soma += p.ocorrencias[i];
-        }
-
-       // fseek(arq, 0, SEEK_END);
-        fwrite(&soma, sizeof(int), 1, arq);
-        */
 
         // quantass x a palavra apareceu
         int aux = p.ocorrencias.size();
+        cout << aux << " ";
         fwrite(&aux, sizeof(int),1, arq);
 
         //linhas em que apareceu:
-        fwrite(p.ocorrencias.data(), p.ocorrencias.size(),1, arq);
-
-        /*
-        for (int i = 0; i < p.ocorrencias.size(); i++) {
-            if(p.ocorrencias[i]>0){
-                fseek(arq, 0, SEEK_END);
-                fwrite(&i, sizeof(int), 1, arq);
-            }
-        }*/
+        //fwrite(p.ocorrencias.data(), p.ocorrencias.size(),1, arq); (não funcionou)
+        fwrite(p.ocorrencias.data(), sizeof(int),p.ocorrencias.size(), arq); // (funcionou)
     }
     fclose(arq);
-    /*
-     * int totalp;
-    FILE *aBin;
-    aBin = fopen("indice.dat", "rb");
-    fseek(aBin, 0, SEEK_SET);
-    fread(&totalp, sizeof(int),1, aBin);
-    cout << "Quantidade total de palavras: " << totalp << endl;
 
-    int c;
-    fseek(aBin, 0, SEEK_CUR);
-    fread(&c, sizeof(int),1, aBin);
-    cout << c << endl;
-
-    string plv;
-    fseek(aBin, 0, SEEK_CUR);
-    fread(&plv, sizeof(plv),1, aBin);
-    cout << plv << endl;
-    fclose(aBin);
-     * */
 
 
 }
@@ -149,9 +112,28 @@ void utilizarIndice() {
 
     FILE *aBin;
     aBin = fopen("indice.dat", "rb");
+    fseek(aBin, 0, SEEK_CUR);
+    fread(&totalp, sizeof(int),1, aBin);
+    cout << "Quantidade total de palavras: " << totalp << endl;
+
+    int c;
+    fread(&c, sizeof(int),1, aBin);
+    cout << c << endl;
+
+    char plv[c];
+    fread(&plv, c,1, aBin);
+    cout << plv << endl;
+
+    int d;
+    fread(&d, sizeof(int),1, aBin);
+    cout << d << endl;
 
 
-
+    for (int i = 0; i < d; ++i) {
+        int e;
+        fread(&e, sizeof(int),1, aBin);
+        cout << e << endl;
+    }
 
     fclose(aBin);
 
