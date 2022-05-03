@@ -4,6 +4,8 @@
 #include <fstream>
 #include <sstream>
 
+//Dupla: Fernando Castilho e Thayná Marins
+
 using namespace std;
 
 typedef struct palavra{
@@ -48,15 +50,15 @@ void inserePalavraOrdem(string p, int linha, vector<palavra> &lista){
 }
 
 void lerArquivo(string nomeArquivo, vector<palavra> &lista){
+    lista.clear();
     string linha;
-    fstream arq("a.txt", fstream::in);
-    //fstream arq("C://Users//STI//CLionProjects//untitled3//a.txt", fstream::in);
-    //fstream arq(nomeArquivo, fstream::in);
+    fstream arq(nomeArquivo, fstream::in);
     int cont = 0;
     while(arq.eof()==0){
         std::getline(arq, linha);
         string palavraTexto;
         stringstream ss(linha);
+
         while(getline(ss, palavraTexto, ' ')){
             palavraTexto = verificaFinalPalavra(palavraTexto);
             if(palavraJaexiste(palavraTexto, lista)){
@@ -89,12 +91,11 @@ void escreverIndice(vector<palavra> &lista){
 
         // quantass x a palavra apareceu
         int aux = p.ocorrencias.size();
-        cout << aux << " ";
+       // cout << aux << " ";
         fwrite(&aux, sizeof(int),1, arq);
 
         //linhas em que apareceu:
-        //fwrite(p.ocorrencias.data(), p.ocorrencias.size(),1, arq); (não funcionou)
-        fwrite(p.ocorrencias.data(), sizeof(int),p.ocorrencias.size(), arq); // (funcionou)
+        fwrite(p.ocorrencias.data(), sizeof(int),p.ocorrencias.size(), arq);
     }
     fclose(arq);
 
@@ -102,13 +103,32 @@ void escreverIndice(vector<palavra> &lista){
 
 }
 
+void  buscaPalavra(string palavraB, vector<palavra> &lista){
+    lista.begin();
+    int avalia = 0;
+    for (auto &p : lista) {
+        if(p.palavra.compare(palavraB) == 0){
+            cout << "Palavra encontrada :)!"<< endl;
+            cout << "A palava apareceu " << p.ocorrencias.size() << " vez(es) no arquivo original." << " Linhas: ";
+            for (int i = 0; i < p.ocorrencias.size(); ++i) {
+                cout <<" "<< p.ocorrencias[i] <<" ";
+
+            }
+            cout << endl;
+            avalia = 1;
+
+        }
+
+    }
+    if(avalia==0){
+        cout << "Palavra nao encontrada :(" << endl;
+    }
+}
+
 void utilizarIndice() {
 
     vector<palavra> lista;
-    int totalp;
-    palavra binpalavra;
-    char paux[50];
-  //  palavraBin binpalavra;
+    int totalp, control=0;
 
     FILE *aBin;
     aBin = fopen("indice.dat", "rb");
@@ -116,74 +136,45 @@ void utilizarIndice() {
     fread(&totalp, sizeof(int),1, aBin);
     cout << "Quantidade total de palavras: " << totalp << endl;
 
-    int c;
-    fread(&c, sizeof(int),1, aBin);
-    cout << c << endl;
+    do{
+        palavra p;
 
-    char plv[c];
-    fread(&plv, c,1, aBin);
-    cout << plv << endl;
+        int c;
+        int oc;
 
-    int d;
-    fread(&d, sizeof(int),1, aBin);
-    cout << d << endl;
+        fread(&c, sizeof(int),1, aBin); //caracteres da palavra
+
+        char paux[c];
+        fread(paux, c ,1, aBin);
+        p.palavra.assign(paux);
+        fread(&oc, sizeof(int),1, aBin); //ocorrencias
+        p.ocorrencias.resize(oc);
+        fread(p.ocorrencias.data(), sizeof(int), oc, aBin);
+        cout << "Qtde. caracteres: " << c << " | Palavra: " << p.palavra << " | Num de ocorrencias: "<< p.ocorrencias.size() <<" | Linhas:";
+
+        for (int i = 0; i < p.ocorrencias.size(); ++i) {
+            cout <<" "<< p.ocorrencias[i] <<" ";
+
+        }
+
+        cout << endl;
+        lista.push_back(p);
 
 
-    for (int i = 0; i < d; ++i) {
-        int e;
-        fread(&e, sizeof(int),1, aBin);
-        cout << e << endl;
-    }
 
+        control++;
+    }while(control < totalp);
     fclose(aBin);
 
-/*
-    ifstream aBin;
-    aBin.open("indice.dat", ios_base::in | ios_base::binary);
 
-    //conseguiu ler o primeiro inteiro do arquivo
-    aBin.read((char *) &totalp, sizeof(int));
-    cout << "Quantidade total de palavras: " << totalp << endl;
-*/
-/*
- //tentativa de ler com struct
-    while(aBin.eof()==0) {
-
-        aBin.read((char *) &binpalavra.qtdCaracteres, sizeof(int));
-        aBin.read((char *) &binpalavra.palavraB, sizeof(palavra));
-        aBin.read((char *) &binpalavra.qtdOcorrencias, sizeof(int));
-        for(int i = 0; i < binpalavra.qtdOcorrencias; i++){
-            aBin.read((char *) &binpalavra.linhas[i], sizeof(int));
-
-        }
-        //nao sei direito como faria aqui pq as x uma plavra tem duas linhas então dois inteiros e as x um inteiro so (uma linha)
-
-    }
+    string buscarPalavra;
+    cout << "Qual palavra voce deseja pesquisar? "<< endl;
+    cin >> buscarPalavra;
 
 
-    /*
+    buscaPalavra(buscarPalavra, lista);
 
-    cout << caracteresBin <<" " << palavra <<" " << qtdOcorrencia;
 
-*/
-
-/*
-    // leitura sem struct, quando vai ler a palavra da erro de acesso de memoria (<error: Cannot access memory at address 0xeb1efff820>)
-    while(aBin.eof()==0){
-
-        aBin.read((char *) &caracteresBin, sizeof(int));
-        aBin.read((char *) &palavra, sizeof(palavra));
-        aBin.read((char *) &qtdOcorrencia, sizeof(int));
-
-        cout << caracteresBin <<" " << palavra <<" " << qtdOcorrencia;
-
-        for(int i = 0; i < qtdOcorrencia; i++){
-            aBin.read((char *) &linha, sizeof(int));
-            cout << " "<< linha;
-        }
-        cout << endl;
-    }
-*/
 
 
 
