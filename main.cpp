@@ -78,31 +78,42 @@ void escreverIndice(vector<palavra> &lista){
     FILE *arq;
     arq = fopen("indice.dat", "wb");
     int size = lista.size();
-    fseek(arq, 0, SEEK_END);
+    //fseek(arq, 0, SEEK_END);
     fwrite(&size, sizeof(int), 1, arq);
     for(auto p : lista) {
+
         int caracteres = p.palavra.size()+1;
-        fseek(arq, 0, SEEK_END);
+        //fseek(arq, 0, SEEK_END);
         fwrite(&caracteres, sizeof(int), 1, arq);
 
         string palavraP;
         palavraP = p.palavra + '\0';
         fseek(arq, 0, SEEK_END);
-        fwrite(&palavraP, sizeof(string), 1, arq);
-
+        fwrite(palavraP.c_str(), caracteres, 1, arq);
+        /*
         int soma = 0;
         for (int i = 0; i < p.ocorrencias.size(); i++) {
             soma += p.ocorrencias[i];
         }
-        fseek(arq, 0, SEEK_END);
-        fwrite(&soma, sizeof(int), 1, arq);
 
+       // fseek(arq, 0, SEEK_END);
+        fwrite(&soma, sizeof(int), 1, arq);
+        */
+
+        // quantass x a palavra apareceu
+        int aux = p.ocorrencias.size();
+        fwrite(&aux, sizeof(int),1, arq);
+
+        //linhas em que apareceu:
+        fwrite(p.ocorrencias.data(), p.ocorrencias.size(),1, arq);
+
+        /*
         for (int i = 0; i < p.ocorrencias.size(); i++) {
             if(p.ocorrencias[i]>0){
                 fseek(arq, 0, SEEK_END);
                 fwrite(&i, sizeof(int), 1, arq);
             }
-        }
+        }*/
     }
     fclose(arq);
     /*
@@ -129,31 +140,30 @@ void escreverIndice(vector<palavra> &lista){
 }
 
 void utilizarIndice() {
-    // tentativa de criar struct para leitura do arquivo
-    typedef struct palabraBin{
-        int qtdCaracteres;
-        string palavraB;
-        int qtdOcorrencias;
-        vector<int> linhas= {0};
-    }palavraBin;
-
-
 
     vector<palavra> lista;
-    int caracteresBin, linha, qtdOcorrencia;
-    string palavra;
     int totalp;
-    palavraBin binpalavra;
+    palavra binpalavra;
+    char paux[50];
+  //  palavraBin binpalavra;
+
+    FILE *aBin;
+    aBin = fopen("indice.dat", "rb");
 
 
+
+
+    fclose(aBin);
+
+/*
     ifstream aBin;
     aBin.open("indice.dat", ios_base::in | ios_base::binary);
 
     //conseguiu ler o primeiro inteiro do arquivo
     aBin.read((char *) &totalp, sizeof(int));
     cout << "Quantidade total de palavras: " << totalp << endl;
-
-
+*/
+/*
  //tentativa de ler com struct
     while(aBin.eof()==0) {
 
@@ -170,11 +180,7 @@ void utilizarIndice() {
 
 
     /*
-     * // teste fora do while
 
-    aBin.read((char *) &caracteresBin, sizeof(int));
-    aBin.read((char *) &palavra, sizeof(palavra));
-    aBin.read((char *) &qtdOcorrencia, sizeof(int));
     cout << caracteresBin <<" " << palavra <<" " << qtdOcorrencia;
 
 */
@@ -196,7 +202,7 @@ void utilizarIndice() {
         cout << endl;
     }
 */
-    aBin.close();
+
 
 
 }
