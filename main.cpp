@@ -109,7 +109,7 @@ void  buscaPalavra(string palavraB, vector<palavra> &lista){
     for (auto &p : lista) {
         if(p.palavra.compare(palavraB) == 0){
             cout << "Palavra encontrada :)!"<< endl;
-            cout << "A palava apareceu " << p.ocorrencias.size() << " vez(es) no arquivo original." << " Linhas: ";
+            cout << "A palava apareceu " << p.ocorrencias.size() << " vez(es) no arquivo original." << " Linha(s): ";
             for (int i = 0; i < p.ocorrencias.size(); ++i) {
                 cout <<" "<< p.ocorrencias[i] <<" ";
 
@@ -150,8 +150,8 @@ void utilizarIndice() {
         fread(&oc, sizeof(int),1, aBin); //ocorrencias
         p.ocorrencias.resize(oc);
         fread(p.ocorrencias.data(), sizeof(int), oc, aBin);
-        cout << "Qtde. caracteres: " << c << " | Palavra: " << p.palavra << " | Num de ocorrencias: "<< p.ocorrencias.size() <<" | Linhas:";
-
+        //cout << "Qtde. caracteres: " << c << " | Palavra: " << p.palavra << " | Num de ocorrencias: "<< p.ocorrencias.size() <<" | Linhas:"; // impressao com qtde de caracteres do arq binario
+        cout << "Palavra: " << p.palavra << " | Num de ocorrencias: "<< p.ocorrencias.size() <<" | Linha(s):";
         for (int i = 0; i < p.ocorrencias.size(); ++i) {
             cout <<" "<< p.ocorrencias[i] <<" ";
 
@@ -174,14 +174,7 @@ void utilizarIndice() {
 
     buscaPalavra(buscarPalavra, lista);
 
-
-
-
-
 }
-
-
-
 
 int main() {
     vector<palavra> lista;
