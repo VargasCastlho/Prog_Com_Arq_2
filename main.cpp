@@ -34,10 +34,16 @@ int buscarIndex(string buscaPalavra, vector<palavra> &lista){
     return NULL;
 }
 
+bool verificaCaracter(string palavra, string c){
+    if(palavra.substr(palavra.length()-1).compare(c) == 0)
+        return true;
+    return false;
+}
+
 string verificaFinalPalavra(string palavra){
     string p = palavra.substr(0, palavra.size());
 
-    if(p.ends_with('.')||p.ends_with(',')||p.ends_with('!')||p.ends_with('?'))
+    if(verificaCaracter(p, ".")||verificaCaracter(p, ",")||verificaCaracter(p, "!")||verificaCaracter(p, "?"))
         return p.substr(0, palavra.size()-1);
     return p;
 }
