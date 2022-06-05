@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/thayn/Documents/UFF/4_PERIODO/Prog_com_arquivos/Prog_Com_Arq
+# Install script for directory: C:/Users/thayn/Documents/UFF/4_PERIODO/Prog_com_arquivos/Trabalho_parte2
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/thayn/Documents/UFF/4_PERIODO/Prog_com_arquivos/Prog_Com_Arq/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/thayn/Documents/UFF/4_PERIODO/Prog_com_arquivos/Trabalho_parte2/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

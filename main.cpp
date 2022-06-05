@@ -42,6 +42,18 @@ string verificaFinalPalavra(string palavra){
     return p;
 }
 
+/*
+ * //insere uma palavra em ordem alfabética na lista
+void InsereOrdem(vector<Palavra> &lista, Palavra palavra){
+    int posicao=0; //posição onde a palavra deve entrar
+
+    while (posicao<lista.size() && (palavra.letras > lista[posicao].letras) ) //se não chegou na posisção correta, continua
+        posicao++;
+
+    lista.insert(lista.begin()+posicao,palavra);//insere na posição correta
+}
+
+ * */
 void inserePalavraOrdem(string p, int linha, vector<palavra> &lista){
     palavra palavra1;
     palavra1.palavra = p;

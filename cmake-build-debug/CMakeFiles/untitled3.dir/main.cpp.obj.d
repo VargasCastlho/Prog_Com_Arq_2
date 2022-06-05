@@ -1,5 +1,5 @@
 CMakeFiles/untitled3.dir/main.cpp.obj: \
- C:\Users\thayn\Documents\UFF\4_PERIODO\Prog_com_arquivos\Prog_Com_Arq\main.cpp \
+ C:\Users\thayn\Documents\UFF\4_PERIODO\Prog_com_arquivos\Trabalho_parte2\main.cpp \
  C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/iostream \
  C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32/bits/c++config.h \
  C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32/bits/os_defines.h \
