@@ -11,11 +11,11 @@ using namespace std;
 typedef struct palavra{
     string palavra;
     vector<int> ocorrencias;
-}palavra;
+}Palavra;
 
 
 
-bool palavraJaexiste(string buscaPalavra, vector<palavra> &lista){
+bool palavraJaexiste(string buscaPalavra, vector<Palavra> &lista){
     lista.begin();
     for (auto &p : lista) {
         if(p.palavra.compare(buscaPalavra) == 0)
@@ -24,7 +24,7 @@ bool palavraJaexiste(string buscaPalavra, vector<palavra> &lista){
     return false;
 }
 
-int buscarIndex(string buscaPalavra, vector<palavra> &lista){
+int buscarIndex(string buscaPalavra, vector<Palavra> &lista){
     int cont = 0;
     for (auto &p : lista) {
         if(p.palavra.compare(buscaPalavra) == 0)
@@ -48,26 +48,25 @@ string verificaFinalPalavra(string palavra){
     return p;
 }
 
-/*
- * //insere uma palavra em ordem alfabética na lista
+
+// insere uma palavra em ordem alfabética na lista
 void InsereOrdem(vector<Palavra> &lista, Palavra palavra){
     int posicao=0; //posição onde a palavra deve entrar
 
-    while (posicao<lista.size() && (palavra.letras > lista[posicao].letras) ) //se não chegou na posisção correta, continua
+    while (posicao<lista.size() && (palavra.palavra > lista[posicao].palavra) ) //se não chegou na posisção correta, continua
         posicao++;
 
     lista.insert(lista.begin()+posicao,palavra);//insere na posição correta
 }
 
- * */
-void inserePalavraOrdem(string p, int linha, vector<palavra> &lista){
-    palavra palavra1;
+void inserePalavraOrdem(string p, int linha, vector<Palavra> &lista){
+    Palavra palavra1;
     palavra1.palavra = p;
     palavra1.ocorrencias.push_back(linha);
-    lista.push_back(palavra1);
+    InsereOrdem(lista, palavra1);
 }
 
-void lerArquivo(string nomeArquivo, vector<palavra> &lista){
+void lerArquivo(string nomeArquivo, vector<Palavra> &lista){
     lista.clear();
     string linha;
     fstream arq(nomeArquivo, fstream::in);
@@ -92,7 +91,7 @@ void lerArquivo(string nomeArquivo, vector<palavra> &lista){
     arq. close();
 }
 
-void escreverIndice(vector<palavra> &lista){
+void escreverIndice(vector<Palavra> &lista){
     FILE *arq;
     arq = fopen("indice.dat", "wb");
     int size = lista.size();
@@ -121,7 +120,7 @@ void escreverIndice(vector<palavra> &lista){
 
 }
 
-void  buscaPalavra(string palavraB, vector<palavra> &lista){
+void  buscaPalavra(string palavraB, vector<Palavra> &lista){
     lista.begin();
     int avalia = 0;
     for (auto &p : lista) {
@@ -145,7 +144,7 @@ void  buscaPalavra(string palavraB, vector<palavra> &lista){
 
 void utilizarIndice() {
 
-    vector<palavra> lista;
+    vector<Palavra> lista;
     int totalp, control=0;
 
     FILE *aBin;
@@ -155,7 +154,7 @@ void utilizarIndice() {
     cout << "Quantidade total de palavras: " << totalp << endl;
 
     do{
-        palavra p;
+        Palavra p;
 
         int c;
         int oc;
@@ -195,7 +194,7 @@ void utilizarIndice() {
 }
 
 int main() {
-    vector<palavra> lista;
+    vector<Palavra> lista;
     int resp = 0;
     string nameArquivo;
     while(resp != -1){
