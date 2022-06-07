@@ -142,13 +142,13 @@ void  buscaPalavra(string palavraB, vector<Palavra> &lista){
     }
 }
 
-void utilizarIndice() {
+void utilizarIndice(string nomeA) {
 
     vector<Palavra> lista;
     int totalp, control=0;
 
     FILE *aBin;
-    aBin = fopen("indice.dat", "rb");
+    aBin = fopen(nomeA.c_str(), "rb");
     fseek(aBin, 0, SEEK_CUR);
     fread(&totalp, sizeof(int),1, aBin);
     cout << "Quantidade total de palavras: " << totalp << endl;
@@ -198,22 +198,29 @@ int main() {
     int resp = 0;
     string nameArquivo;
     while(resp != -1){
-        cout << endl <<"<1>- Criar indice para um arquivo texto" << endl << "<2>- Utilizar um indice existente para realizar buscas por palavras" <<endl
+        cout << endl <<"<1>- Criar indice para um arquivo texto" << endl << "<2>- Salvar indice atual"<< endl  << "<3>- Utilizar um indice existente para realizar buscas por palavras"<< endl  <<"<4>- Mostrar as informacoes de um Indice"<< endl <<"<5>- Encerrar"<<endl
              << "<3>- Encerrar o programa" << endl;
         cout << "Resp:";
         cin >> resp;
+        string nomeA;
 
         switch(resp){
             case 1:
                 cout << "Nome do arquivo texto:" <<endl;
                 cin >> nameArquivo;
                 lerArquivo(nameArquivo, lista);
-                escreverIndice(lista);
                 break;
             case 2:
-                utilizarIndice();
+                escreverIndice(lista);
+                cout << "Indice Salvo!" << endl;
                 break;
             case 3:
+                cin>>nomeA;
+                utilizarIndice(nomeA);
+                break;
+            case 4:
+                break;
+            case 5:
                 cout <<"Voce saiu do programa!" << endl;
                 resp = -1;
                 break;
