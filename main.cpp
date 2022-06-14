@@ -8,6 +8,7 @@
 
 using namespace std;
 
+//structs novas
 
 typedef struct ocorrencia{
     int arquivo; // posicao do arquivo na lista de arquivos processados
@@ -23,7 +24,10 @@ typedef struct palavra{
 typedef struct indice{
     vector<string> arquivos; // lista contendo os nomes dos arquivos texto ja processados
     vector<Palavra> listaPalavras; //lista contendo todas as palavras ja encontrada
-};
+}Indice;
+
+
+
 
 bool palavraJaexiste(string buscaPalavra, vector<Palavra> &lista){
     lista.begin();
@@ -202,9 +206,63 @@ void utilizarIndice(string nomeA) {
     buscaPalavra(buscarPalavra, lista);
 
 }
+///Trabalho parte 2
+
+/// case 2
+
+void escreveOcorrencia(fstream &arq, Ocorrencia ocorrencia){
+    ///escreve o numero do arquivo binario (occorencia int arquivo)
+    /// escreve as linhas onde a palavra apareceu neste arquivo
+
+
+}
+
+void escrevePalavra(fstream &arq, Palavra palavra){
+    ///escreve no arq binario as letras da palavra
+    ///para cada ocorrecencia
+        escreveOcorrencia(arq, palavra.ocorrenciasP[i]);
+
+
+}
+void escreveNomeArquivo(fstream &arq, string nomeArquivo){
+   ///escreve a qtde de letras do nome
+    ///escreve o nome no arq binario
+}
+void salvarIndice(Indice ind){
+    ///abrir arq binario
+    ///escreve a qtde de arquivos
+    ///para cada indice de ind.arquivo
+        escreveNomeArquivo(arq, ind.arquivos[t]);
+     /// escreve a qtde de palavras
+    ///para cada palavra de ind.palavras
+        escrevePalavra(arquivo, ind.listaPalavras[i]);
+    ///fechar arq
+}
+
+///case 3
+
+lerNomeArquivo(fstream &arq, Indice ind){
+
+}
+
+lerPalavra(fstream &arq, Indice ind){
+
+}
+void lerIndice(Indice &ind) {
+    ///liberarIndice(ind); //pode ser ind.clear
+    /// abrir o arq binario
+    /// ler qtd de arquivos do indice
+    /// para cada arquivo
+    lerNomeArquivo(arq, ind);
+    /// ler a qtde de palavras do indice
+    ///para cada palavra
+    lerPalavra(arq, ind);
+    ///fechar arq
+}
 
 int main() {
     vector<Palavra> lista;
+    Indice ind;
     int resp = 0;
     string nameArquivo;
     while(resp != -1){
@@ -221,12 +279,12 @@ int main() {
                 lerArquivo(nameArquivo, lista);
                 break;
             case 2:
-                escreverIndice(lista);
+                salvarIndice(ind);
                 cout << "Indice Salvo!" << endl;
                 break;
             case 3:
                 cin>>nomeA;
-                utilizarIndice(nomeA);
+                lerIndice(ind);
                 break;
             case 4:
                 break;
