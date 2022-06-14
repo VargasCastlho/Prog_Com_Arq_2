@@ -27,7 +27,7 @@ typedef struct indice{
 }Indice;
 
 
-
+//codigos do trabalho parte 1
 
 bool palavraJaexiste(string buscaPalavra, vector<Palavra> &lista){
     lista.begin();
