@@ -235,17 +235,19 @@ void salvarIndice(Indice ind){
         escreveNomeArquivo(arq, ind.arquivos[t]);
      /// escreve a qtde de palavras
     ///para cada palavra de ind.palavras
-        escrevePalavra(arquivo, ind.listaPalavras[i]);
+        escrevePalavra(arq, ind.listaPalavras[i]);
     ///fechar arq
 }
 
 ///case 3
 
 lerNomeArquivo(fstream &arq, Indice ind){
+    //salvar o nome do arq no indice
 
 }
 
 lerPalavra(fstream &arq, Indice ind){
+    //ler palavara e salvar no indice
 
 }
 void lerIndice(Indice &ind) {
