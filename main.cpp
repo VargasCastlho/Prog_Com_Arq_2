@@ -8,12 +8,22 @@
 
 using namespace std;
 
+
+typedef struct ocorrencia{
+    int arquivo; // posicao do arquivo na lista de arquivos processados
+    vector<int> linhas; // linhas onde a palavra foi encontrada
+}Ocorrencia;
+
 typedef struct palavra{
-    string palavra;
-    vector<int> ocorrencias;
+    string palavra; //palavra em questao
+    vector<Ocorrencia> ocorrenciasP; // lista contendo informaçoes da ocorrencia de uma palavra em um arquivo
+   // vector<int> ocorrencias; //antigo trabalho
 }Palavra;
 
-
+typedef struct indice{
+    vector<string> arquivos; // lista contendo os nomes dos arquivos texto ja processados
+    vector<Palavra> listaPalavras; //lista contendo todas as palavras ja encontrada
+};
 
 bool palavraJaexiste(string buscaPalavra, vector<Palavra> &lista){
     lista.begin();
