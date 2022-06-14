@@ -29,18 +29,17 @@ typedef struct indice{
 
 //codigos do trabalho parte 1
 
-bool palavraJaexiste(string buscaPalavra, vector<Palavra> &lista){
-    lista.begin();
-    for (auto &p : lista) {
+bool palavraJaexiste(string buscaPalavra, Indice &lista){
+    for (auto &p : lista.listaPalavras) {
         if(p.palavra.compare(buscaPalavra) == 0)
             return true;
     }
     return false;
 }
 
-int buscarIndex(string buscaPalavra, vector<Palavra> &lista){
+int buscarIndex(string buscaPalavra, Indice &lista){
     int cont = 0;
-    for (auto &p : lista) {
+    for (auto &p : lista.listaPalavras) {
         if(p.palavra.compare(buscaPalavra) == 0)
             return cont;
         cont++;
@@ -62,48 +61,88 @@ string verificaFinalPalavra(string palavra){
     return p;
 }
 
-
-// insere uma palavra em ordem alfabética na lista
-void InsereOrdem(vector<Palavra> &lista, Palavra palavra){
-    int posicao=0; //posição onde a palavra deve entrar
-
-    while (posicao<lista.size() && (palavra.palavra > lista[posicao].palavra) ) //se não chegou na posisção correta, continua
-        posicao++;
-
-    lista.insert(lista.begin()+posicao,palavra);//insere na posição correta
-}
-
-void inserePalavraOrdem(string p, int linha, vector<Palavra> &lista){
-    Palavra palavra1;
-    palavra1.palavra = p;
-    palavra1.ocorrencias.push_back(linha);
-    InsereOrdem(lista, palavra1);
-}
-
-void lerArquivo(string nomeArquivo, vector<Palavra> &lista){
-    lista.clear();
-    string linha;
-    fstream arq(nomeArquivo, fstream::in);
+int verificaSeArquivoFoiProcessado(string nomeArquivo, Indice lista){
     int cont = 0;
-    while(arq.eof()==0){
-        std::getline(arq, linha);
-        string palavraTexto;
-        stringstream ss(linha);
-
-        while(getline(ss, palavraTexto, ' ')){
-            palavraTexto = verificaFinalPalavra(palavraTexto);
-            if(palavraJaexiste(palavraTexto, lista)){
-                int index = buscarIndex(palavraTexto, lista);
-                lista[index].ocorrencias.push_back(cont);
-            }
-            else{
-                inserePalavraOrdem(palavraTexto, cont, lista);
-            }
-        }
+    for(string p : lista.arquivos){
+        if(p.compare(nomeArquivo) == 0)
+            return cont;
         cont++;
     }
-    arq. close();
+    return 0;
 }
+
+int verificaSePalavraFoiProcessado(string nomeArquivo, Indice lista, int index){
+    int cont = 0;
+    int indexArquivo = verificaSeArquivoFoiProcessado(nomeArquivo, lista);
+    for(Ocorrencia o : lista.listaPalavras[index].ocorrenciasP){
+        if(o.arquivo == indexArquivo)
+            return cont;
+        cont++;
+    }
+    return 0;
+}
+
+void adicionaPalavra(string p, int linha, Indice &lista, string nomeArquivo, int index){
+    int indexPalavra = verificaSePalavraFoiProcessado(nomeArquivo, lista, index);
+    if(indexPalavra!=0){
+        lista.listaPalavras[index].ocorrenciasP[indexPalavra].linhas.push_back(linha);
+    }
+    else {
+        Ocorrencia ocorrencia1;
+        ocorrencia1.arquivo = verificaSeArquivoFoiProcessado(nomeArquivo, lista);
+        ocorrencia1.linhas.push_back(linha);
+        lista.listaPalavras[index].ocorrenciasP.push_back(ocorrencia1);
+    }
+
+}
+
+// insere uma palavra em ordem alfabética na lista
+
+void inserePalavraOrdem(string p, int linha, Indice &lista, string nomeArquivo){
+    Palavra palavra1;
+    Ocorrencia ocorrencia1;
+    ocorrencia1.arquivo = verificaSeArquivoFoiProcessado(nomeArquivo, lista);
+    ocorrencia1.linhas.push_back(linha);
+    palavra1.palavra = p;
+    palavra1.ocorrenciasP.push_back(ocorrencia1);
+
+
+    int posicao=0; //posição onde a palavra deve entrar
+
+    while (posicao<lista.listaPalavras.size() && (palavra1.palavra > lista.listaPalavras[posicao].palavra) ) //se não chegou na posisção correta, continua
+        posicao++;
+
+    lista.listaPalavras.insert(lista.listaPalavras.begin()+posicao,palavra1);//insere na posição correta
+}
+
+void lerArquivo(string nomeArquivo, Indice &lista) {
+    if (verificaSeArquivoFoiProcessado(nomeArquivo, lista)!=0) {
+        cout << "Arquivo já processado!" << endl;
+    } else {
+        lista.arquivos.push_back(nomeArquivo);
+        string linha;
+        fstream arq(nomeArquivo, fstream::in);
+        int cont = 0;
+        while (arq.eof() == 0) {
+            std::getline(arq, linha);
+            string palavraTexto;
+            stringstream ss(linha);
+
+            while (getline(ss, palavraTexto, ' ')) {
+                palavraTexto = verificaFinalPalavra(palavraTexto);
+                if (palavraJaexiste(palavraTexto, lista)) {
+                    int index = buscarIndex(palavraTexto, lista);
+                    adicionaPalavra(palavraTexto, cont, lista, nomeArquivo, index);
+                } else {
+                    inserePalavraOrdem(palavraTexto, cont, lista, nomeArquivo);
+                }
+            }
+            cont++;
+        }
+        arq.close();
+    }
+}
+
 
 void escreverIndice(vector<Palavra> &lista){
     FILE *arq;
@@ -263,7 +302,6 @@ void lerIndice(Indice &ind) {
 }
 
 int main() {
-    vector<Palavra> lista;
     Indice ind;
     int resp = 0;
     string nameArquivo;
@@ -278,7 +316,7 @@ int main() {
             case 1:
                 cout << "Nome do arquivo texto:" <<endl;
                 cin >> nameArquivo;
-                lerArquivo(nameArquivo, lista);
+                lerArquivo(nameArquivo, ind);
                 break;
             case 2:
                 salvarIndice(ind);
