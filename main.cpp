@@ -44,7 +44,7 @@ int buscarIndex(string buscaPalavra, Indice &lista){
             return cont;
         cont++;
     }
-    return NULL;
+    return NULL;//return -1
 }
 
 bool verificaCaracter(string palavra, string c){
@@ -82,6 +82,7 @@ int verificaSePalavraFoiProcessado(string nomeArquivo, Indice lista, int index){
     return 0;
 }
 
+//adicionar ocorrencia
 void adicionaPalavra(string p, int linha, Indice &lista, string nomeArquivo, int index){
     int indexPalavra = verificaSePalavraFoiProcessado(nomeArquivo, lista, index);
     if(indexPalavra!=0){
@@ -272,16 +273,15 @@ void escrevePalavra(FILE *arq, Palavra palavra){
     fwrite(&caracteres, sizeof(int), 1, arq);
 
     ///escreve no arq binario as letras da palavra + /0
-    string palavraP = palavra.palavra + '\0';
-    fwrite(palavraP.c_str(), caracteres, 1, arq);
+   // string palavraP = palavra.palavra + '\0';
+    fwrite(palavra.palavra.c_str(), caracteres, 1, arq);
 
     /// ocorrencias total
     int octotal = palavra.ocorrenciasP.size();
     fwrite(&octotal, sizeof(int), 1, arq);
 
-
     ///para cada ocorrecencia
-    for(int i = 0; i <= palavra.ocorrenciasP.size(); i++){
+    for(int i = 0; i < palavra.ocorrenciasP.size(); i++){
         escreveOcorrencia(arq, palavra.ocorrenciasP[i]);
     }
 
@@ -293,9 +293,9 @@ void escreveNomeArquivo(FILE *arq, string nomeArquivo){
     int caracteres = nomeArquivo.size()+1;
     fwrite(&caracteres, sizeof(int), 1, arq);
     ///escreve o nome no arq binario
-    string palavraP;
-    palavraP = nomeArquivo + '\0';
-    fwrite(palavraP.c_str(), caracteres, 1, arq);
+    //string palavraP;
+   // palavraP = nomeArquivo + '\0';
+    fwrite(nomeArquivo.c_str(), caracteres, 1, arq);
 
 
 
@@ -306,10 +306,10 @@ void salvarIndice(Indice &ind){
     arq = fopen("indice.dat", "wb");
     ///escreve a qtde de arquivos texto processados
     int size = ind.arquivos.size();
-    fseek(arq, 0, SEEK_END);
+    //fseek(arq, 0, SEEK_END);
     fwrite(&size, sizeof(int), 1, arq);
     ///para cada arquivo de ind.arquivo
-    for(int i = 0; i <= ind.arquivos.size(); i++){
+    for(int i = 0; i < ind.arquivos.size(); i++){
         escreveNomeArquivo(arq, ind.arquivos[i]);
 
     }
@@ -318,7 +318,7 @@ void salvarIndice(Indice &ind){
      fwrite(&qtdePalavras, sizeof(int), 1, arq);
 
     ///para cada palavra de ind.palavras
-    for(int j = 0; j <= ind.listaPalavras.size(); j++){
+    for(int j = 0; j < ind.listaPalavras.size(); j++){
         escrevePalavra(arq, ind.listaPalavras[j]);
     }
 
@@ -354,16 +354,15 @@ void lerPalavra(FILE *arq, Indice &ind){
     char letras[qtdletraPal];
     fread(letras, qtdletraPal ,1, arq);
 
-    p.palavra = letras;
+    p.palavra.assign(letras);
 
     ///lendo a ocorrencia total
     int oct;
     fread(&oct, sizeof(int), 1, arq);
     p.ocorrenciasP.resize(oct);
 
-
     ///ler para cada ocorrecencia
-    for(int i = 0; i <= oct; i++){
+    for(int i = 0; i < oct; i++){
         lerOcorrencia(arq,p.ocorrenciasP[i]);
     }
 
@@ -386,7 +385,7 @@ void lerNomeArquivo(FILE *arq, Indice &ind){
 }
 
 void lerIndice(Indice &ind) {
-    ///liberarIndice(ind);
+    ///liberar indice;
     ind.arquivos.clear();
     ind.listaPalavras.clear();
 
@@ -398,19 +397,19 @@ void lerIndice(Indice &ind) {
     int qtdArq;
     fread(&qtdArq, sizeof(int), 1, arq);
 
-    ind.arquivos.resize(qtdArq);   // p.ocorrencias.resize(oc);
+   // ind.arquivos.resize(qtdArq);   // p.ocorrencias.resize(oc);
     /// para cada arquivo
-    for(int i = 0; i <= qtdArq; i++){
+    for(int i = 0; i < qtdArq; i++){
         lerNomeArquivo(arq, ind);
     }
 
     /// ler a qtde de palavras do indice
     int qtdPal;
     fread(&qtdPal, sizeof(int), 1, arq);
-    ind.listaPalavras.resize(qtdPal);
+  //  ind.listaPalavras.resize(qtdPal);
 
     ///para cada palavra
-    for(int j = 0; j <= qtdPal; j++){
+    for(int j = 0; j < qtdPal; j++){
         lerPalavra(arq, ind);
     }
     ///fechar arq
@@ -422,8 +421,7 @@ int main() {
     int resp = 0;
     string nameArquivo;
     while(resp != -1){
-        cout << endl <<"<1>- Criar indice para um arquivo texto" << endl << "<2>- Salvar indice atual"<< endl  << "<3>- Utilizar um indice existente para realizar buscas por palavras"<< endl  <<"<4>- Mostrar as informacoes de um Indice"<< endl <<"<5>- Encerrar"<<endl
-             << "<3>- Encerrar o programa" << endl;
+        cout << endl <<"<1>- Criar indice para um arquivo texto" << endl << "<2>- Salvar indice atual"<< endl  << "<3>- Ler um indice"<< endl  <<"<4>- Mostrar as informacoes de um Indice"<< endl <<"<5>- Encerrar"<<endl;
         cout << "Resp:";
         cin >> resp;
         string nomeA;
@@ -439,7 +437,7 @@ int main() {
                 cout << "Indice Salvo!" << endl;
                 break;
             case 3:
-                cin>>nomeA;
+                //cin>>nomeA;
                 lerIndice(ind);
                 break;
             case 4:
