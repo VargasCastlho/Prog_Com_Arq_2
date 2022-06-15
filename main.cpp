@@ -257,15 +257,29 @@ void utilizarIndice(string nomeA) {
 void escreveOcorrencia(FILE *arq, Ocorrencia ocorrencia){
     ///escreve o numero do arquivo binario (occorencia int arquivo)
     fwrite(&ocorrencia.arquivo, sizeof(int), 1, arq);
+    ///qtde de vezes que a palavra apareceu no arquivo
+    int oc = ocorrencia.linhas.size();
+    fwrite(&oc, sizeof(int), 1, arq);
     /// escreve as linhas onde a palavra apareceu neste arquivo
     fwrite(ocorrencia.linhas.data(), sizeof(int), ocorrencia.linhas.size(), arq);
-
 
 }
 
 void escrevePalavra(FILE *arq, Palavra palavra){
-    ///escreve no arq binario as letras da palavra
-    fwrite(palavra.palavra.c_str(), sizeof(char), 1, arq);
+
+    ///escreve qtde de letras da palavra + 1;
+    int caracteres = palavra.palavra.size()+1;
+    fwrite(&caracteres, sizeof(int), 1, arq);
+
+    ///escreve no arq binario as letras da palavra + /0
+    string palavraP = palavra.palavra + '\0';
+    fwrite(palavraP.c_str(), caracteres, 1, arq);
+
+    /// ocorrencias total
+    int octotal = palavra.ocorrenciasP.size();
+    fwrite(&octotal, sizeof(int), 1, arq);
+
+
     ///para cada ocorrecencia
     for(int i = 0; i <= palavra.ocorrenciasP.size(); i++){
         escreveOcorrencia(arq, palavra.ocorrenciasP[i]);
@@ -283,8 +297,10 @@ void escreveNomeArquivo(FILE *arq, string nomeArquivo){
     palavraP = nomeArquivo + '\0';
     fwrite(palavraP.c_str(), caracteres, 1, arq);
 
+
+
 }
-void salvarIndice(Indice ind){
+void salvarIndice(Indice &ind){
     ///abrir arq binario
     FILE *arq;
     arq = fopen("indice.dat", "wb");
@@ -295,6 +311,7 @@ void salvarIndice(Indice ind){
     ///para cada arquivo de ind.arquivo
     for(int i = 0; i <= ind.arquivos.size(); i++){
         escreveNomeArquivo(arq, ind.arquivos[i]);
+
     }
      /// escreve a qtde de palavras
      int qtdePalavras = ind.listaPalavras.size();
@@ -311,25 +328,93 @@ void salvarIndice(Indice ind){
 
 ///case 3
 
-lerNomeArquivo(FILE *arq, Indice ind){
-    //salvar o nome do arq no indice
+
+void lerOcorrencia(FILE *arq, Ocorrencia &ocorrencia){
+    ///ler o numero do arquivo binario (ocorrencia int arquivo)
+    fread(&ocorrencia.arquivo, sizeof(int), 1, arq);
+
+    /// ocorrencia no arquivo
+    int oc;
+    fread(&oc, sizeof(int), 1, arq);
+    ocorrencia.linhas.resize(oc);
+
+   /// ler as linhas onde a palavra apareceu neste arquivo
+   fread(ocorrencia.linhas.data(), sizeof(int), oc, arq);
+
 
 }
 
-lerPalavra(FILE *arq, Indice ind){
-    //ler palavara e salvar no indice
+void lerPalavra(FILE *arq, Indice &ind){
+    Palavra p;
+    ///lendo a qtde de letras da palavra
+    int qtdletraPal;
+    fread(&qtdletraPal, sizeof(int), 1, arq);
+
+    ///ler no arq binario as letras da palavra
+    char letras[qtdletraPal];
+    fread(letras, qtdletraPal ,1, arq);
+
+    p.palavra = letras;
+
+    ///lendo a ocorrencia total
+    int oct;
+    fread(&oct, sizeof(int), 1, arq);
+    p.ocorrenciasP.resize(oct);
+
+
+    ///ler para cada ocorrecencia
+    for(int i = 0; i <= oct; i++){
+        lerOcorrencia(arq,p.ocorrenciasP[i]);
+    }
+
+    ind.listaPalavras.push_back(p);
 
 }
+
+void lerNomeArquivo(FILE *arq, Indice &ind){
+    ///ler a qtde de letras do nome
+    int letrasqtd;
+    fread(&letrasqtd, sizeof(int), 1, arq);
+
+    ///ler o nome no arq binario
+    char nome[letrasqtd];
+    fread(nome, letrasqtd ,1, arq);
+
+    ind.arquivos.push_back(nome);
+
+
+}
+
 void lerIndice(Indice &ind) {
-    ///liberarIndice(ind); //pode ser ind.clear
+    ///liberarIndice(ind);
+    ind.arquivos.clear();
+    ind.listaPalavras.clear();
+
     /// abrir o arq binario
+    FILE *arq;
+    arq = fopen("indice.dat", "rb");
+
     /// ler qtd de arquivos do indice
+    int qtdArq;
+    fread(&qtdArq, sizeof(int), 1, arq);
+
+    ind.arquivos.resize(qtdArq);   // p.ocorrencias.resize(oc);
     /// para cada arquivo
-   // lerNomeArquivo(arq, ind);
+    for(int i = 0; i <= qtdArq; i++){
+        lerNomeArquivo(arq, ind);
+    }
+
     /// ler a qtde de palavras do indice
+    int qtdPal;
+    fread(&qtdPal, sizeof(int), 1, arq);
+    ind.listaPalavras.resize(qtdPal);
+
     ///para cada palavra
-    //lerPalavra(arq, ind);
+    for(int j = 0; j <= qtdPal; j++){
+        lerPalavra(arq, ind);
+    }
     ///fechar arq
+    fclose(arq);
 }
 
 int main() {
