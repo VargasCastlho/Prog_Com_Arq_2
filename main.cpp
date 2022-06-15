@@ -143,7 +143,7 @@ void lerArquivo(string nomeArquivo, Indice &lista) {
     }
 }
 
-
+/*
 void escreverIndice(vector<Palavra> &lista){
     FILE *arq;
     arq = fopen("indice.dat", "wb");
@@ -172,7 +172,8 @@ void escreverIndice(vector<Palavra> &lista){
 
 
 }
-
+*/
+/*
 void  buscaPalavra(string palavraB, vector<Palavra> &lista){
     lista.begin();
     int avalia = 0;
@@ -194,7 +195,8 @@ void  buscaPalavra(string palavraB, vector<Palavra> &lista){
         cout << "Palavra nao encontrada :(" << endl;
     }
 }
-
+*/
+/*
 void utilizarIndice(string nomeA) {
 
     vector<Palavra> lista;
@@ -245,47 +247,76 @@ void utilizarIndice(string nomeA) {
     buscaPalavra(buscarPalavra, lista);
 
 }
+
+ */
+
 ///Trabalho parte 2
 
 /// case 2
 
-void escreveOcorrencia(fstream &arq, Ocorrencia ocorrencia){
+void escreveOcorrencia(FILE *arq, Ocorrencia ocorrencia){
     ///escreve o numero do arquivo binario (occorencia int arquivo)
+    fwrite(&ocorrencia.arquivo, sizeof(int), 1, arq);
     /// escreve as linhas onde a palavra apareceu neste arquivo
+    fwrite(ocorrencia.linhas.data(), sizeof(int), ocorrencia.linhas.size(), arq);
 
 
 }
 
-void escrevePalavra(fstream &arq, Palavra palavra){
+void escrevePalavra(FILE *arq, Palavra palavra){
     ///escreve no arq binario as letras da palavra
+    fwrite(palavra.palavra.c_str(), sizeof(char), 1, arq);
     ///para cada ocorrecencia
+    for(int i = 0; i <= palavra.ocorrenciasP.size(); i++){
         escreveOcorrencia(arq, palavra.ocorrenciasP[i]);
+    }
+
 
 
 }
-void escreveNomeArquivo(fstream &arq, string nomeArquivo){
+void escreveNomeArquivo(FILE *arq, string nomeArquivo){
    ///escreve a qtde de letras do nome
+    int caracteres = nomeArquivo.size()+1;
+    fwrite(&caracteres, sizeof(int), 1, arq);
     ///escreve o nome no arq binario
+    string palavraP;
+    palavraP = nomeArquivo + '\0';
+    fwrite(palavraP.c_str(), caracteres, 1, arq);
+
 }
 void salvarIndice(Indice ind){
     ///abrir arq binario
-    ///escreve a qtde de arquivos
-    ///para cada indice de ind.arquivo
-        escreveNomeArquivo(arq, ind.arquivos[t]);
+    FILE *arq;
+    arq = fopen("indice.dat", "wb");
+    ///escreve a qtde de arquivos texto processados
+    int size = ind.arquivos.size();
+    fseek(arq, 0, SEEK_END);
+    fwrite(&size, sizeof(int), 1, arq);
+    ///para cada arquivo de ind.arquivo
+    for(int i = 0; i <= ind.arquivos.size(); i++){
+        escreveNomeArquivo(arq, ind.arquivos[i]);
+    }
      /// escreve a qtde de palavras
+     int qtdePalavras = ind.listaPalavras.size();
+     fwrite(&qtdePalavras, sizeof(int), 1, arq);
+
     ///para cada palavra de ind.palavras
-        escrevePalavra(arq, ind.listaPalavras[i]);
+    for(int j = 0; j <= ind.listaPalavras.size(); j++){
+        escrevePalavra(arq, ind.listaPalavras[j]);
+    }
+
     ///fechar arq
+    fclose(arq);
 }
 
 ///case 3
 
-lerNomeArquivo(fstream &arq, Indice ind){
+lerNomeArquivo(FILE *arq, Indice ind){
     //salvar o nome do arq no indice
 
 }
 
-lerPalavra(fstream &arq, Indice ind){
+lerPalavra(FILE *arq, Indice ind){
     //ler palavara e salvar no indice
 
 }
@@ -294,10 +325,10 @@ void lerIndice(Indice &ind) {
     /// abrir o arq binario
     /// ler qtd de arquivos do indice
     /// para cada arquivo
-    lerNomeArquivo(arq, ind);
+   // lerNomeArquivo(arq, ind);
     /// ler a qtde de palavras do indice
     ///para cada palavra
-    lerPalavra(arq, ind);
+    //lerPalavra(arq, ind);
     ///fechar arq
 }
 
