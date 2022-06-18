@@ -27,7 +27,6 @@ typedef struct indice {
 } Indice;
 
 
-//codigos do trabalho parte 1
 
 bool palavraJaexiste(string buscaPalavra, Indice &lista) {
     for (auto &p: lista.listaPalavras) {
@@ -44,7 +43,7 @@ int buscarIndex(string buscaPalavra, Indice &lista) {
             return cont;
         cont++;
     }
-    return -1;//return -1
+    return -1;
 }
 
 bool verificaCaracter(string palavra, string c) {
@@ -144,112 +143,6 @@ void lerArquivo(string nomeArquivo, Indice &lista) {
     }
 }
 
-/*
-void escreverIndice(vector<Palavra> &lista){
-    FILE *arq;
-    arq = fopen("indice.dat", "wb");
-    int size = lista.size();
-    fseek(arq, 0, SEEK_END);
-    fwrite(&size, sizeof(int), 1, arq);
-    for(auto p : lista) {
-
-        int caracteres = p.palavra.size()+1;
-        fwrite(&caracteres, sizeof(int), 1, arq);
-
-        string palavraP;
-        palavraP = p.palavra + '\0';
-        fwrite(palavraP.c_str(), caracteres, 1, arq);
-
-        // quantass x a palavra apareceu
-        int aux = p.ocorrencias.size();
-       // cout << aux << " ";
-        fwrite(&aux, sizeof(int),1, arq);
-
-        //linhas em que apareceu:
-        fwrite(p.ocorrencias.data(), sizeof(int),p.ocorrencias.size(), arq);
-    }
-    fclose(arq);
-
-
-
-}
-*/
-/*
-void  buscaPalavra(string palavraB, vector<Palavra> &lista){
-    lista.begin();
-    int avalia = 0;
-    for (auto &p : lista) {
-        if(p.palavra.compare(palavraB) == 0){
-            cout << "Palavra encontrada :)!"<< endl;
-            cout << "A palava apareceu " << p.ocorrencias.size() << " vez(es) no arquivo original." << " Linha(s): ";
-            for (int i = 0; i < p.ocorrencias.size(); ++i) {
-                cout <<" "<< p.ocorrencias[i] <<" ";
-
-            }
-            cout << endl;
-            avalia = 1;
-
-        }
-
-    }
-    if(avalia==0){
-        cout << "Palavra nao encontrada :(" << endl;
-    }
-}
-*/
-/*
-void utilizarIndice(string nomeA) {
-
-    vector<Palavra> lista;
-    int totalp, control=0;
-
-    FILE *aBin;
-    aBin = fopen(nomeA.c_str(), "rb");
-    fseek(aBin, 0, SEEK_CUR);
-    fread(&totalp, sizeof(int),1, aBin);
-    cout << "Quantidade total de palavras: " << totalp << endl;
-
-    do{
-        Palavra p;
-
-        int c;
-        int oc;
-
-        fread(&c, sizeof(int),1, aBin); //caracteres da palavra
-
-        char paux[c];
-        fread(paux, c ,1, aBin);
-        p.palavra.assign(paux);
-        fread(&oc, sizeof(int),1, aBin); //ocorrencias
-        p.ocorrencias.resize(oc);
-        fread(p.ocorrencias.data(), sizeof(int), oc, aBin);
-        //cout << "Qtde. caracteres: " << c << " | Palavra: " << p.palavra << " | Num de ocorrencias: "<< p.ocorrencias.size() <<" | Linhas:"; // impressao com qtde de caracteres do arq binario
-        cout << "Palavra: " << p.palavra << " | Num de ocorrencias: "<< p.ocorrencias.size() <<" | Linha(s):";
-        for (int i = 0; i < p.ocorrencias.size(); ++i) {
-            cout <<" "<< p.ocorrencias[i] <<" ";
-
-        }
-
-        cout << endl;
-        lista.push_back(p);
-
-
-
-        control++;
-    }while(control < totalp);
-    fclose(aBin);
-
-
-    string buscarPalavra;
-    cout << "Qual palavra voce deseja pesquisar? "<< endl;
-    cin >> buscarPalavra;
-
-
-    buscaPalavra(buscarPalavra, lista);
-
-}
-
- */
 
 ///Trabalho parte 2
 
@@ -267,19 +160,16 @@ void escreveOcorrencia(FILE *arq, Ocorrencia ocorrencia) {
 }
 
 void escrevePalavra(FILE *arq, Palavra palavra) {
-
-    ///escreve qtde de letras da palavra + 1;
+    ///escreve qtde de letras da palavra;
     int caracteres = palavra.palavra.size() + 1;
     fwrite(&caracteres, sizeof(int), 1, arq);
 
-    ///escreve no arq binario as letras da palavra + /0
-    // string palavraP = palavra.palavra + '\0';
+    ///escreve no arq binario as letras da palavra
     fwrite(palavra.palavra.c_str(), caracteres, 1, arq);
 
     /// ocorrencias total
     int octotal = palavra.ocorrenciasP.size();
     fwrite(&octotal, sizeof(int), 1, arq);
-
 
     ///para cada ocorrecencia
     for (int i = 0; i < palavra.ocorrenciasP.size(); i++) {
@@ -294,8 +184,6 @@ void escreveNomeArquivo(FILE *arq, string nomeArquivo) {
     int caracteres = nomeArquivo.size() + 1;
     fwrite(&caracteres, sizeof(int), 1, arq);
     ///escreve o nome no arq binario
-    //string palavraP;
-    // palavraP = nomeArquivo + '\0';
     fwrite(nomeArquivo.c_str(), caracteres, 1, arq);
 
 
@@ -307,7 +195,6 @@ void salvarIndice(Indice &ind) {
     arq = fopen("indice.dat", "wb");
     ///escreve a qtde de arquivos texto processados
     int size = ind.arquivos.size();
-    //fseek(arq, 0, SEEK_END);
     fwrite(&size, sizeof(int), 1, arq);
     ///para cada arquivo de ind.arquivo
     for (int i = 0; i < ind.arquivos.size(); i++) {
@@ -382,7 +269,6 @@ void lerNomeArquivo(FILE *arq, Indice &ind) {
 
     ind.arquivos.push_back(nome);
 
-
 }
 
 void lerIndice(Indice &ind) {
@@ -398,7 +284,6 @@ void lerIndice(Indice &ind) {
     int qtdArq;
     fread(&qtdArq, sizeof(int), 1, arq);
 
-    // ind.arquivos.resize(qtdArq);   // p.ocorrencias.resize(oc);
     /// para cada arquivo
     for (int i = 0; i < qtdArq; i++) {
         lerNomeArquivo(arq, ind);
@@ -407,7 +292,6 @@ void lerIndice(Indice &ind) {
     /// ler a qtde de palavras do indice
     int qtdPal;
     fread(&qtdPal, sizeof(int), 1, arq);
-    //  ind.listaPalavras.resize(qtdPal);
 
     ///para cada palavra
     for (int j = 0; j < qtdPal; j++) {
@@ -418,15 +302,15 @@ void lerIndice(Indice &ind) {
 }
 
 void mostrarPalavrasEmOrdem(Indice ind) {
-    cout << "Nomes dos arquivos que compõe este indice: ";
+    cout << "Palavras que compoe este indice: " << endl;
     for (Palavra p : ind.listaPalavras) {
-        cout << p.palavra;
+        cout << p.palavra << endl;
         for (Ocorrencia o : p.ocorrenciasP) {
             cout << "Numero do arquivo: " << o.arquivo << endl;
             cout << "Qtd de vzs que a palavra apareceu no arquivo: " << o.linhas.size() << endl;
             cout << "Numeros das linhas: ";
             for (int l : o.linhas) {
-                cout << l;
+                cout <<" "<< l;
             }
             cout << endl;
         }
@@ -435,9 +319,9 @@ void mostrarPalavrasEmOrdem(Indice ind) {
 }
 
 void mostrarNomesArquivosIndice(vector<string> nomes) {
-    cout << "Nomes dos arquivos que compõe este indice: ";
+    cout << "Nomes dos arquivos que compoe este indice: ";
     for (string s: nomes) {
-        cout << s;
+        cout <<" "<< s;
     }
     cout << endl;
 }
@@ -470,7 +354,6 @@ int main() {
                 cout << "Indice Salvo!" << endl;
                 break;
             case 3:
-                //cin>>nomeA;
                 lerIndice(ind);
                 break;
             case 4:
