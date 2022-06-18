@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 
-//Dupla: Fernando Castilho e Thayná Marins
+///Dupla: Fernando Castilho e Thayná Marins
 
 using namespace std;
 
