@@ -8,8 +8,6 @@
 
 using namespace std;
 
-//structs novas
-
 typedef struct ocorrencia {
     int arquivo; // posicao do arquivo na lista de arquivos processados
     vector<int> linhas; // linhas onde a palavra foi encontrada
