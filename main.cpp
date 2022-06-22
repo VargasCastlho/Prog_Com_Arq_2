@@ -76,7 +76,7 @@ int verificaOcorrencia(string nomeArquivo, Indice lista, int index) {
             return cont;
         cont++;
     }
-    return 0;
+    return -1;
 }
 
 //adicionar ocorrencia
